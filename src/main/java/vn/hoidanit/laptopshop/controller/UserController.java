@@ -1,6 +1,7 @@
 package vn.hoidanit.laptopshop.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import vn.hoidanit.laptopshop.service.UserService;
@@ -15,9 +16,14 @@ public class UserController {
     }
 
     @RequestMapping("/")
-    public String getHomePage() {
+    public String getHomePage(Model model) {
         String test = this.userService.handleHello();
-        return "hello";
+        model.addAttribute("eric", test);
+        model.addAttribute("hoidanit", "from controller with model");
+        // user sevice nối với jsp thông qua model
+        // eric là phần thêm vào
+        // test là user service
+        return "hello";// web động
     }
 }
 
