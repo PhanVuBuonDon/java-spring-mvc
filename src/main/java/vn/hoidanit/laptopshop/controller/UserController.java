@@ -17,13 +17,19 @@ public class UserController {
 
     @RequestMapping("/")
     public String getHomePage(Model model) {
-        String test = this.userService.handleHello();
-        model.addAttribute("eric", test);
-        model.addAttribute("hoidanit", "from controller with model");
+        // String test = this.userService.handleHello();
+        // model.addAttribute("eric", test);
+        // model.addAttribute("hoidanit", "from controller with model");
         // user sevice nối với jsp thông qua model
         // eric là phần thêm vào
         // test là user service
         return "hello";// web động
+    }
+
+    @RequestMapping("/admin/user")
+    public String createUser(Model model) {
+
+        return "admin/user/create";
     }
 }
 
