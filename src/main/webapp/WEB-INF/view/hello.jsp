@@ -18,14 +18,15 @@
         </head>
 
         <body>
-            hello from jsp (view)
+            Hello from jsp
+
             <h1>
-                ${eric}
+                ${comfirmCreate}
             </h1>
             <h2>
-                ${hoidanit}
+
             </h2>
-            <button class="btn btn-warning">Submit</button>
+            <button class="btn btn-warning">Chuyển hướng</button>
         </body>
 
         </html>
