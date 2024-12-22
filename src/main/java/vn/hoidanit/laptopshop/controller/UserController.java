@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.repository.UserRepository;
 import vn.hoidanit.laptopshop.service.UserService;
 
 @Controller
 public class UserController {
     // DI dependency Injection
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -20,9 +21,8 @@ public class UserController {
 
     @RequestMapping("/")
     public String getHomePage(Model model) {
-        // String test = this.userService.handleHello();
-        // model.addAttribute("eric", test);
-        // model.addAttribute("hoidanit", "from controller with model");
+        model.addAttribute("eric", "test");
+        model.addAttribute("hoidanit", "from controller with model");
         // user sevice nối với jsp thông qua model
         // eric là phần thêm vào
         // test là user service
@@ -39,6 +39,7 @@ public class UserController {
     public String createUserPage(Model model, @ModelAttribute("newUser") User hoidanit) {
         System.out.println("run here" + hoidanit);
         model.addAttribute("comfirmCreate", "Tạo User thành công!");
+        this.userService.handleSaveUser(hoidanit);
         return "hello";
     }
 }
