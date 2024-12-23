@@ -80,4 +80,17 @@ public class UserController {
         return "redirect:/admin/user";
     }
 
+    @GetMapping("/admin/user/delete/{id}")
+    public String getDeleteDetailPage(Model model, @PathVariable long id) {
+        model.addAttribute("id", id);
+        model.addAttribute("newUser", new User());
+        return "admin/user/delete";
+    }
+
+    @PostMapping("/admin/user/delete")
+    public String postDeleteDetailPage(Model model, @ModelAttribute("newUser") User deleteUser) {
+        this.userService.deleteAUser(deleteUser.getId());
+        return "redirect:/admin/user";
+
+    }
 }
