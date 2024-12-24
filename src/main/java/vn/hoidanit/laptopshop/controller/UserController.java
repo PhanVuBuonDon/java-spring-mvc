@@ -36,8 +36,8 @@ public class UserController {
 
     @RequestMapping("/admin/user")
     public String getTableUsers(Model model) {
-        List<User> users = this.userService.getAllUser();
-        model.addAttribute("users1", users);
+        List<User> allUsers = this.userService.getAllUser();
+        model.addAttribute("allUsers", allUsers);
         return "admin/user/table-user";
     }
 
@@ -48,9 +48,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
-    public String createUserPage(Model model, @ModelAttribute("newUser") User hoidanit) {
+    public String createUserPage(Model model, @ModelAttribute("newUser") User createdUser) {
         model.addAttribute("comfirmCreate", "Tạo User thành công!");
-        this.userService.handleSaveUser(hoidanit);
+        this.userService.handleSaveUser(createdUser);
         return "redirect:/admin/user";// redirect vào url
     }
 
