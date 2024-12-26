@@ -36,29 +36,48 @@
                                             <hr>
                                             <form:form method="post" action="/admin/user/create"
                                                 modelAttribute="newUser">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Email address:</label>
-                                                    <form:input type="email" class="form-control" path="email" />
+                                                <div class="row mb-3">
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Email address:</label>
+                                                        <form:input type="email" class="form-control" path="email" />
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Password:</label>
+                                                        <form:input type="password" class="form-control"
+                                                            path="password" />
+                                                    </div>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Password:</label>
-                                                    <form:input type="password" class="form-control" path="password" />
+
+                                                <div class="row mb-3">
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Phone number:</label>
+                                                        <form:input type="text" class="form-control" path="phone" />
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Full Name:</label>
+                                                        <form:input type="text" class="form-control" path="fullName" />
+                                                    </div>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Phone number:</label>
-                                                    <form:input type="text" class="form-control" path="phone" />
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Full Name:</label>
-                                                    <form:input type="text" class="form-control" path="fullName" />
-                                                </div>
-                                                <div class="mb-3">
+                                                <div class="mb-3 col-12 ">
                                                     <label class="form-label">Address:</label>
                                                     <form:input type="text" class="form-control" path="address" />
                                                 </div>
 
-
-                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                <div class="row mb-3">
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Role:</label>
+                                                        <select class="form-select" aria-label="Role select">
+                                                            <option value="1">ADMIN</option>
+                                                            <option value="2">USER</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3 col-12 col-md-6">
+                                                        <label for="avatarFile" class="form-label">Avatar</label>
+                                                        <input class="form-control" type="file" id="avatarFile"
+                                                            accept=".png, .jpg, .jpeg">
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Create</button>
                                             </form:form>
                                         </div>
 
