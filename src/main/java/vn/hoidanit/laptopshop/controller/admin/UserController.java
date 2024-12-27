@@ -2,6 +2,8 @@ package vn.hoidanit.laptopshop.controller.admin;
 
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +23,14 @@ public class UserController {
     // DI dependency Injection
     private final UserService userService;
     private final UploadService uploadService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserController(UserService userService,
-            UploadService uploadService) {
+            UploadService uploadService,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.uploadService = uploadService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/")
@@ -56,7 +61,13 @@ public class UserController {
             @RequestParam("hoidanitFile") MultipartFile file) {
 
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
-        // this.userService.handleSaveUser(createdUser);
+        String hasPassword = this.passwordEncoder.encode(hoidanit.getPassword());
+
+        hoidanit.setAvatar((avatar));
+        hoidanit.setPassword(hasPassword);
+        hoidanit.setRole(this.userService.getRoleByName(hoidanit.getRole().getName()));
+        // save
+        this.userService.handleSaveUser(hoidanit);
         return "redirect:/admin/user";// redirect vào url
     }
 
