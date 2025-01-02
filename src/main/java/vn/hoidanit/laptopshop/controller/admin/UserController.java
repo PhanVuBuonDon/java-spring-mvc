@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
+import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.UploadService;
 import vn.hoidanit.laptopshop.service.UserService;
@@ -99,10 +100,28 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/update")
-    public String postUpdateUser(Model model, @ModelAttribute("newUser") User updateUser,
+    public String postUpdateUser(Model model,
+            @ModelAttribute("newUser") @Valid User updateUser,
+            BindingResult newUserBindingResult,
             @RequestParam("hoidanitFile") MultipartFile file) {
+
+        System.out.println("updateUser " + updateUser);
+
+        List<FieldError> errors = newUserBindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println(">>>>>>>" + error.getField() + " - " + error.getDefaultMessage());
+        }
+
+        // validate
+        if (newUserBindingResult.hasErrors()) {
+            return "admin/user/update";
+        }
         User currentUser = this.userService.getUserById(updateUser.getId());
+        System.out.println("currentUser " + currentUser);
+
         if (currentUser != null) {
+            System.out.println("run here");
+
             currentUser.setAddress(updateUser.getAddress());
             currentUser.setFullName(updateUser.getFullName());
             currentUser.setPhone(updateUser.getPhone());
@@ -113,6 +132,7 @@ public class UserController {
 
             this.userService.handleSaveUser(currentUser);
         }
+
         return "redirect:/admin/user";
     }
 
@@ -125,8 +145,11 @@ public class UserController {
 
     @PostMapping("/admin/user/delete")
     public String postDeleteDetailPage(Model model, @ModelAttribute("newUser") User deleteUser) {
+        User user = this.userService.getUserById(deleteUser.getId());
+        System.out.println("user: " + user);
+        this.uploadService.handleDeleteFile(user.getAvatar(), "avatar");
         this.userService.deleteAUser(deleteUser.getId());
-        return "redirect:/admin/user";
 
+        return "redirect:/admin/user";
     }
 }

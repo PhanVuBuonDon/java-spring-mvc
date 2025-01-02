@@ -17,6 +17,10 @@
 
                 <script>
                     $(document).ready(() => {
+                        $("#avatarPreview").attr("src", "/images/avatar/${newUser.avatar}");
+                        $("#avatarPreview").css({ "display": "block" });
+                    });
+                    $(document).ready(() => {
                         const avatarFile = $("#avatarFile");
                         avatarFile.change(function (e) {
                             const imgURL = URL.createObjectURL(e.target.files[0]);
@@ -51,23 +55,35 @@
                                                     <label class="form-label">Id:</label>
                                                     <form:input type="text" class="form-control" path="id" />
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Email address:</label>
-                                                    <form:input type="email" class="form-control" path="email"
-                                                        disabled="true" />
+                                                <div class="mb-3 col-12">
+                                                    <c:set var="errorEmail">
+                                                        <form:errors path="email" cssClass="invalid-feedback" />
+                                                    </c:set>
+                                                    <label class="form-label">Email:</label>
+                                                    <form:input type="email"
+                                                        class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
+                                                        path="email" readonly="true" />
+                                                    ${errorEmail}
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Phone number:</label>
                                                     <form:input type="text" class="form-control" path="phone" />
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
+                                                    <c:set var="errorFullname">
+                                                        <form:errors path="fullName" cssClass="invalid-feedback" />
+                                                    </c:set>
                                                     <label class="form-label">Full Name:</label>
-                                                    <form:input type="text" class="form-control" path="fullName" />
+                                                    <form:input type="text"
+                                                        class="form-control ${not empty errorFullname ? 'is-invalid' : ''}"
+                                                        path="fullName" />
+                                                    ${errorFullname}
                                                 </div>
-                                                <div class="mb-3">
+                                                <div class="mb-3 col-12">
                                                     <label class="form-label">Address:</label>
                                                     <form:input type="text" class="form-control" path="address" />
                                                 </div>
+
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Role:</label>
                                                     <form:select class="form-select" path="role.name">
@@ -82,7 +98,7 @@
                                                 </div>
                                                 <div class="col-12 mb-3">
                                                     <img style="max-height: 250px; display: none;" alt="avatar preview"
-                                                        id="avatarPreview" />
+                                                        id="avatarPreview" src="/images/avatar/${newUser.avatar}" />
                                                 </div>
                                                 <div class="col-12 mb-5">
                                                     <button type="submit" class="btn btn-warning">Update</button>

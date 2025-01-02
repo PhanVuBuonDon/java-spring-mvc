@@ -49,4 +49,25 @@ public class UploadService {
         }
         return finalName;
     }
+
+    public void handleDeleteFile(String fileName, String targetFolder) {
+        try {
+            // delete file image
+            String rootPath = this.servletContext.getRealPath("/resources/images");
+
+            File dir = new File(rootPath + File.separator + targetFolder);
+
+            File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
+            // uuid
+            System.out.println("serverFile: " + serverFile);
+            // delete
+            if (serverFile.delete()) {
+                System.out.println(serverFile.getName() + " is deleted!");
+            } else {
+                System.out.println("Delete operation is failed.");
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to Delete image !!");
+        }
+    }
 }
