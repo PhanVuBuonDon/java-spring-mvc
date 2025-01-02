@@ -32,7 +32,7 @@ public class ProductController {
 
     @GetMapping("/admin/product")
     public String getTableProducts(Model model) {
-        List<Product> allProducts = this.productService.getAllProducts();
+        List<Product> allProducts = this.productService.fetchProducts();
         model.addAttribute("allProducts", allProducts);
         return "admin/product/show";
     }

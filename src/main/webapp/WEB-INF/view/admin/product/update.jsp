@@ -86,7 +86,7 @@
                                                         <form:errors path="detailDesc" cssClass="invalid-feedback" />
                                                     </c:set>
                                                     <label class="form-label">Detail description:</label>
-                                                    <form:input style="min-height: 80px;" type="text"
+                                                    <form:textarea type="text"
                                                         class="form-control ${not empty errorDetailDesc ? 'is-invalid' : ''}"
                                                         path="detailDesc" />
                                                     ${errorDetailDesc}
