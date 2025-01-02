@@ -74,7 +74,6 @@ public class ProductController {
         Product product = this.productService.fetchProductById(id).get();
         model.addAttribute("product", product);
         model.addAttribute("id", id);
-
         return "admin/product/detail";
     }
 
