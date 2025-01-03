@@ -44,6 +44,7 @@
 
                 <jsp:include page="../layout/header.jsp" />
 
+                <jsp:include page="../layout/banner.jsp" />
 
                 <!-- Modal Search Start -->
                 <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -67,10 +68,6 @@
                     </div>
                 </div>
                 <!-- Modal Search End -->
-
-                <jsp:include page="../layout/banner.jsp" />
-
-                <jsp:include page="../layout/feature.jsp" />
 
                 <!-- Fruits Shop Start-->
                 <div class="container-fluid fruite py-5">
@@ -137,6 +134,8 @@
                     </div>
                 </div>
                 <!-- Fruits Shop End-->
+
+                <jsp:include page="../layout/feature.jsp" />
 
                 <jsp:include page="../layout/footer.jsp" />
 
