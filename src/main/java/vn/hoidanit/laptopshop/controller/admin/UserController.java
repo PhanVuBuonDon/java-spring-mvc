@@ -100,7 +100,7 @@ public class UserController {
 
     @PostMapping("/admin/user/update")
     public String postUpdateUser(Model model,
-            @ModelAttribute("newUser") @Valid User updateUser,
+            @ModelAttribute("newUser") User updateUser,
             BindingResult newUserBindingResult,
             @RequestParam("hoidanitFile") MultipartFile file) {
 
