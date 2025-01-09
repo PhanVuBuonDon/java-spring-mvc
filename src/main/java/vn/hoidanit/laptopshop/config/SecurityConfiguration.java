@@ -78,8 +78,8 @@ public class SecurityConfiguration {
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .invalidSessionUrl("/logout?expired")
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false))
+                        .maximumSessions(1)// gioi han 1 tk dang nhap tren bao nhieu thiet bi
+                        .maxSessionsPreventsLogin(false))// nguoi thu 2 da nguoi truoc ra
 
                 .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
 
