@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hoidanit.laptopshop.domain.Product;
@@ -35,8 +37,13 @@ public class ItemController {
         long productID = id;
         String email = (String) session.getAttribute("email");
 
-        this.productService.handleAddProductToCart(email, productID);
+        this.productService.handleAddProductToCart(email, productID, session);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/cart")
+    public String getCartPage(Model model) {
+        return "client/cart/show";
     }
 }
