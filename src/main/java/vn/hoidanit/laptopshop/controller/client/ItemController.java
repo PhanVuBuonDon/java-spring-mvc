@@ -1,5 +1,6 @@
 package vn.hoidanit.laptopshop.controller.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -63,7 +64,7 @@ public class ItemController {
 
         Cart cart = this.productService.fetchByUser(currenUser);
         // lay cartDetail truc tiep tu cart do da join
-        List<CartDetail> cartDetails = cart.getCartDetails();
+        List<CartDetail> cartDetails = cart == null ? new ArrayList<>() : cart.getCartDetails();
 
         double totalPrice = 0;
         for (CartDetail cd : cartDetails) {
@@ -74,5 +75,17 @@ public class ItemController {
         model.addAttribute("totalPrice", totalPrice);
 
         return "client/cart/show";
+    }
+
+    @PostMapping("/delete-cart-product/{id}")
+    public String deleteCartProduct(@PathVariable long id, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        // Tìm cart-detail theo id (id từ view gửi lên)
+        long cartDetailId = id;
+
+        this.productService.handleDeleteCartProduct(cartDetailId, session);
+
+        return "redirect:/cart";
     }
 }
