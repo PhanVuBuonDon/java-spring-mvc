@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
             <!DOCTYPE html>
             <html lang="en">
 
@@ -11,7 +10,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
                 <meta name="author" content="Hỏi Dân IT" />
-                <title>Manage Order</title>
+                <title>Detail Order</title>
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
@@ -23,16 +22,17 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage Orders</h1>
+                                <h1 class="mt-4">Detail Orders</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Order</li>
+                                    <li class="breadcrumb-item"><a href="/admin/order">Order</a></li>
+                                    <li class="breadcrumb-item active">View Detail</li>
                                 </ol>
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-12 mx-auto">
                                             <div class="d-flex justify-content-between">
-                                                <h3>Table orders</h3>
+                                                <h3>Order detail with id = ${id}</h3>
 
                                             </div>
                                         </div>
@@ -40,40 +40,52 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">ID</th>
-                                                    <th scope="col">Total Price</th>
-                                                    <th scope="col">User</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">Sản phẩm</th>
+                                                    <th scope="col">Tên</th>
+                                                    <th scope="col">Giá cả</th>
+                                                    <th scope="col">Số lượng</th>
+                                                    <th scope="col">Thành tiền</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach var="order" items="${allOrders}">
+                                                <c:forEach var="orderDetail" items="${orderDetails}">
                                                     <tr>
-                                                        <td>${order.id}</td>
                                                         <td>
-                                                            <p>
-                                                                <fmt:formatNumber type="number"
-                                                                    value="${order.totalPrice}" /> đ
-                                                            </p>
-
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="/images/product/${orderDetail.product.image}"
+                                                                    class="img-fluid me-5 rounded-circle"
+                                                                    style="width: 80px; height: 80px;" alt="">
+                                                            </div>
                                                         </td>
-                                                        <td>${order.user.fullName}</td>
-                                                        <td>${order.status}</td>
                                                         <td>
-                                                            <a href="/admin/order/${order.id}"
-                                                                class="btn btn-success">View</a>
-                                                            <a href="/admin/order/update/${order.id}"
-                                                                class="btn btn-warning mx-2">Update</a>
-                                                            <a href="/admin/order/delete/${order.id}"
-                                                                class="btn btn-danger">Delete</a>
-
+                                                            <p class="mb-0 mt-4">
+                                                                <a href="/product/${orderDetail.product.id}"
+                                                                    target="_blank">
+                                                                    ${orderDetail.product.name}
+                                                                </a>
+                                                            </p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="mb-0 mt-4">
+                                                                <fmt:formatNumber type="number"
+                                                                    value="${orderDetail.price}" /> đ
+                                                            </p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="mb-0 mt-4">
+                                                                <fmt:formatNumber type="number"
+                                                                    value="${orderDetail.quantity}" />
+                                                            </p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="mb-0 mt-4">
+                                                                <fmt:formatNumber type="number"
+                                                                    value="${orderDetail.price * orderDetail.quantity}" />
+                                                                đ
+                                                            </p>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
-
-
-
                                             </tbody>
                                         </table>
                                     </div>
