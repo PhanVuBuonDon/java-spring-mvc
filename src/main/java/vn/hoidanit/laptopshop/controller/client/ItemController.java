@@ -173,10 +173,11 @@ public class ItemController {
             // TODO: handle exception
         }
 
-        String name = nameOptional.get();
-
         Pageable pageable = PageRequest.of(page - 1, 5);
-        Page<Product> prs = this.productService.fetchProducts(pageable, name);
+
+        String name = nameOptional.isPresent() ? nameOptional.get() : "";
+
+        Page<Product> prs = this.productService.fetchProductsWithSpec(pageable, name);
         List<Product> allProducts = prs.getContent();
 
         model.addAttribute("currentPage", page);
