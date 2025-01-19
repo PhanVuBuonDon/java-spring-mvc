@@ -161,7 +161,8 @@ public class ItemController {
 
     @GetMapping("/products")
     public String getProductsPage(Model model,
-            @RequestParam("page") Optional<String> pageOptional) {
+            @RequestParam("page") Optional<String> pageOptional,
+            @RequestParam("name") Optional<String> nameOptional) {
 
         int page = 1;
         try {
@@ -172,8 +173,10 @@ public class ItemController {
             // TODO: handle exception
         }
 
+        String name = nameOptional.get();
+
         Pageable pageable = PageRequest.of(page - 1, 5);
-        Page<Product> prs = this.productService.fetchProducts(pageable);
+        Page<Product> prs = this.productService.fetchProducts(pageable, name);
         List<Product> allProducts = prs.getContent();
 
         model.addAttribute("currentPage", page);
