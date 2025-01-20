@@ -112,7 +112,7 @@ public class ProductService {
 
     // case 6
     public Specification<Product> buildPriceSpecification(List<String> price) {
-        Specification<Product> combinedSpec = (root, query, criteriaBuilder) -> criteriaBuilder.disjunction();
+        Specification<Product> combinedSpec = Specification.where(null);
         for (String p : price) {
             double min = 0;
             double max = 0;
