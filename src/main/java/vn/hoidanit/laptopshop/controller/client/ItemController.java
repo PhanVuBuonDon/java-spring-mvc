@@ -165,7 +165,17 @@ public class ItemController {
     }
 
     @GetMapping("/thanks")
-    public String getThanhTouPage(Model model) {
+    public String getThanhYouPage(Model model,
+            @RequestParam("vnp_ResponseCode") Optional<String> vnpayResponseCode,
+            @RequestParam("vnp_TxnRef") Optional<String> paymentRef) {
+
+        if (vnpayResponseCode.isPresent() && paymentRef.isPresent()) {
+            // thanh toan qua VNPAY, cap nhat trnang thai order
+            String paymentStatus = vnpayResponseCode.get().equals("00")
+                    ? "PAYMENT_SUCCEED"
+                    : "PAYMENT_FAILED";
+            this.productService.updatePaymentStatus(paymentRef.get(), paymentStatus);
+        }
 
         return "client/cart/thanks";
     }
