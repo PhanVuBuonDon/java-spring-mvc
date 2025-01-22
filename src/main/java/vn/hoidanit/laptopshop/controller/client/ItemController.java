@@ -1,9 +1,11 @@
 package vn.hoidanit.laptopshop.controller.client;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,17 +34,19 @@ import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoidanit.laptopshop.repository.CartRepository;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
+import vn.hoidanit.laptopshop.service.VNPayService;
 
 @Controller
 public class ItemController {
     private final ProductService productService;
-    private final UserService userService;
+    private final VNPayService vNPayService;
 
     public ItemController(ProductService productService,
             CartRepository cartRepository,
-            UserService userService) {
+            UserService userService,
+            VNPayService vNPayService) {
         this.productService = productService;
-        this.userService = userService;
+        this.vNPayService = vNPayService;
     }
 
     @GetMapping("/product/{id}")
@@ -136,17 +140,25 @@ public class ItemController {
             @RequestParam("receiverName") String receiverName,
             @RequestParam("receiverAddress") String receiverAddress,
             @RequestParam("receiverPhone") String receiverPhone,
-            @RequestParam("paymentMethod") String paymentMethod) {
+            @RequestParam("paymentMethod") String paymentMethod,
+            @RequestParam("totalPrice") String totalPrice) throws NumberFormatException, UnsupportedEncodingException {
         User currentUser = new User();// null
         HttpSession session = request.getSession(false);
         long id = (long) session.getAttribute("id");
         currentUser.setId(id);
 
+        final String uuid = UUID.randomUUID().toString().replace("-", "");
+
         this.productService.handlePlaceOrder(currentUser, session,
-                receiverName, receiverAddress, receiverPhone, paymentMethod);
+                receiverName, receiverAddress, receiverPhone,
+                paymentMethod, uuid);
 
         if (!paymentMethod.equals("COD")) {
             // to do: redirect to VNPAY
+            String ip = this.vNPayService.getIpAddress(request);
+            String vnUrl = this.vNPayService.generateVNPayURL(Double.parseDouble(totalPrice), uuid, ip);
+
+            return "redirect:" + vnUrl;
         }
 
         return "redirect:/thanks";

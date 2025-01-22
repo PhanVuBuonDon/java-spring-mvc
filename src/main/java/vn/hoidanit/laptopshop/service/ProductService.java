@@ -251,7 +251,8 @@ public class ProductService {
 
     public void handlePlaceOrder(User user, HttpSession session,
             String receiverName, String receiverAddress,
-            String receiverPhone, String paymentMethod) {
+            String receiverPhone, String paymentMethod,
+            String uuid) {
 
         // step 1: get cart by user
         Cart cart = this.cartRepository.findByUser(user);
@@ -270,7 +271,6 @@ public class ProductService {
 
                 order.setPaymentMethod(paymentMethod);
                 order.setPaymentStatus("PAYMENT_UNPAID");
-                final String uuid = UUID.randomUUID().toString().replace("-", "");
                 order.setPaymentRef(paymentMethod.equals("COD") ? "UNKNOWN" : uuid);
 
                 double sum = 0;
