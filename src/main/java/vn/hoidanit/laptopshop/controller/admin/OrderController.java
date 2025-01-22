@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import vn.hoidanit.laptopshop.domain.Order;
 import vn.hoidanit.laptopshop.domain.OrderDetail;
+import vn.hoidanit.laptopshop.domain.Order_;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.OrderService;
 
@@ -40,7 +42,7 @@ public class OrderController {
             // TODO: handle exception
         }
 
-        Pageable pageable = PageRequest.of(page - 1, 2);
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Order_.ID).descending());
         Page<Order> prs = this.orderService.fetchOrders(pageable);
         List<Order> allOrders = prs.getContent();
 
