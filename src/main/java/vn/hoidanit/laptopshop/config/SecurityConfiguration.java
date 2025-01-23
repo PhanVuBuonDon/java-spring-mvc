@@ -76,7 +76,8 @@ public class SecurityConfiguration {
 
                         .anyRequest().authenticated())
 
-                // .oauth2Login(Customizer.withDefaults())
+                // custom login page
+                .oauth2Login(oauth2 -> oauth2.loginPage("/login"))
 
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
