@@ -36,6 +36,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // Process oAuth2User or map it to your local user database
         String email = (String) attributes.get("email");
+
         String fullName = (String) attributes.get("name");
 
         Role userRole = this.userService.getRoleByName("USER");
@@ -46,9 +47,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 // create new user
                 User oUser = new User();
                 oUser.setEmail(email);
-                oUser.setAvatar("default-google.png");
+                oUser.setAvatar(registrationId.equalsIgnoreCase("github")
+                        ? "default-github.png"
+                        : "default-google.png");
                 oUser.setFullName(fullName);
-                oUser.setProvider("GOOGLE");
+                oUser.setProvider(registrationId.equalsIgnoreCase("github")
+                        ? "GITHUB"
+                        : "GOOGLE");
                 oUser.setPassword("hoidanit");
                 oUser.setRole(userRole);
 
@@ -58,7 +63,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return new DefaultOAuth2User(
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
-                oAuth2User.getAttributes(),
-                "email");// id
+                oAuth2User.getAttributes(), "email");// id
     }
 }
