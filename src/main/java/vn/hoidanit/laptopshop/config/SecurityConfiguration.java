@@ -3,7 +3,6 @@ package vn.hoidanit.laptopshop.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,86 +16,93 @@ import org.springframework.session.security.web.authentication.SpringSessionReme
 import jakarta.servlet.DispatcherType;
 import vn.hoidanit.laptopshop.service.CustomUserDetailsService;
 import vn.hoidanit.laptopshop.service.UserService;
+import vn.hoidanit.laptopshop.service.userinfo.CustomOAuth2UserService;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserService userService) {
-        return new CustomUserDetailsService(userService);// ghi đè lên UserDetailsService bằng CustomUserDetailsService
-                                                         // (do mình tạo ra để lấy database)
-    }
+        @Bean
+        public UserDetailsService userDetailsService(UserService userService) {
+                return new CustomUserDetailsService(userService);// ghi đè lên UserDetailsService bằng
+                                                                 // CustomUserDetailsService
+                                                                 // (do mình tạo ra để lấy database)
+        }
 
-    @Bean
-    public DaoAuthenticationProvider authProvider(
-            PasswordEncoder passwordEncoder,
-            UserDetailsService userDetailsService) {
+        @Bean
+        public DaoAuthenticationProvider authProvider(
+                        PasswordEncoder passwordEncoder,
+                        UserDetailsService userDetailsService) {
 
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        // authProvider.setHideUserNotFoundExceptions(false); tang tinh bao mat
+                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+                authProvider.setUserDetailsService(userDetailsService);
+                authProvider.setPasswordEncoder(passwordEncoder);
+                // authProvider.setHideUserNotFoundExceptions(false); tang tinh bao mat
 
-        return authProvider;
-    }
+                return authProvider;
+        }
 
-    @Bean
-    public AuthenticationSuccessHandler customSuccessHandler() {
-        return new CustomSuccessHandler();
-    }
+        @Bean
+        public AuthenticationSuccessHandler customSuccessHandler() {
+                return new CustomSuccessHandler();
+        }
 
-    @Bean
-    public SpringSessionRememberMeServices rememberMeServices() {
-        SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
-        // optionally customize
-        rememberMeServices.setAlwaysRemember(true);
-        return rememberMeServices;
-    }
+        @Bean
+        public SpringSessionRememberMeServices rememberMeServices() {
+                SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+                // optionally customize
+                rememberMeServices.setAlwaysRemember(true);
+                return rememberMeServices;
+        }
 
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // v6. lamda cho phep viet ngan gon nhu ben duoi
-        http
-                .authorizeHttpRequests(authorize -> authorize
-                        .dispatcherTypeMatchers(DispatcherType.FORWARD,
-                                DispatcherType.INCLUDE)
-                        .permitAll()
+        @Bean
+        SecurityFilterChain filterChain(HttpSecurity http,
+                        UserService userService) throws Exception {
+                // v6. lamda cho phep viet ngan gon nhu ben duoi
+                http
+                                .authorizeHttpRequests(authorize -> authorize
+                                                .dispatcherTypeMatchers(DispatcherType.FORWARD,
+                                                                DispatcherType.INCLUDE)
+                                                .permitAll()
 
-                        .requestMatchers("/", "/login", "/product/**", "/register", "/products/**",
-                                "/client/**", "/css/**", "/js/**", "/images/**")
-                        .permitAll()
-                        // ROLE_ADMIN
-                        .requestMatchers("/admin/**").hasRole("ADMIN")// tu dong bo ROLE_
+                                                .requestMatchers("/", "/login", "/product/**", "/register",
+                                                                "/products/**",
+                                                                "/client/**", "/css/**", "/js/**", "/images/**")
+                                                .permitAll()
 
-                        .anyRequest().authenticated())
+                                                .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                // custom login page
-                .oauth2Login(oauth2 -> oauth2.loginPage("/login"))
+                                                .anyRequest().authenticated())
 
-                .sessionManagement((sessionManagement) -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                        .invalidSessionUrl("/logout?expired")
-                        .maximumSessions(1)// gioi han 1 tk dang nhap tren bao nhieu thiet bi
-                        .maxSessionsPreventsLogin(false))// nguoi thu 2 da nguoi truoc ra
+                                .oauth2Login(oauth2 -> oauth2.loginPage("/login")
+                                                .successHandler(customSuccessHandler())
+                                                .failureUrl("/login?error")
+                                                .userInfoEndpoint(user -> user
+                                                                .userService(new CustomOAuth2UserService(userService))))
 
-                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
+                                .sessionManagement((sessionManagement) -> sessionManagement
+                                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                                                .invalidSessionUrl("/logout?expired")
+                                                .maximumSessions(1)// gioi han 1 tk dang nhap tren bao nhieu thiet bi
+                                                .maxSessionsPreventsLogin(false))// nguoi thu 2 da nguoi truoc ra
 
-                .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
+                                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
 
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .failureUrl("/login?error")
-                        .successHandler(customSuccessHandler())
-                        .permitAll())
-                .exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
+                                .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
 
-        return http.build();
-    }
+                                .formLogin(formLogin -> formLogin
+                                                .loginPage("/login")
+                                                .failureUrl("/login?error")
+                                                .successHandler(customSuccessHandler())
+                                                .permitAll())
+                                .exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
+
+                return http.build();
+        }
 
 }

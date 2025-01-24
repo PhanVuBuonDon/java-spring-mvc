@@ -22,7 +22,7 @@ import vn.hoidanit.laptopshop.repository.CartRepository;
 import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
 import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
-import vn.hoidanit.laptopshop.service.pecification.ProductSpecs;
+import vn.hoidanit.laptopshop.service.specification.ProductSpecs;
 
 @Controller
 public class ProductService {
