@@ -1,4 +1,4 @@
-package vn.hoidanit.laptopshop.repository;
+package vn.hoidanit.laptopshop.repository.jpa;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import vn.hoidanit.laptopshop.domain.Product;
+
+// elasticsearch
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     List<Product> findAll();
@@ -23,5 +25,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Page<Product> findAll(Pageable page);
 
     Page<Product> findAll(Specification<Product> spec, Pageable page);
+
+    Page<Product> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
 
 }

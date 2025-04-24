@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import vn.hoidanit.laptopshop.domain.Order;
 import vn.hoidanit.laptopshop.domain.OrderDetail;
 import vn.hoidanit.laptopshop.domain.User;
-import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
-import vn.hoidanit.laptopshop.repository.OrderRepository;
+import vn.hoidanit.laptopshop.repository.jpa.OrderDetailRepository;
+import vn.hoidanit.laptopshop.repository.jpa.OrderRepository;
 
 @Controller
 public class OrderService {

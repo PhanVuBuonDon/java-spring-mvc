@@ -6,14 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.Role;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
-import vn.hoidanit.laptopshop.repository.OrderRepository;
-import vn.hoidanit.laptopshop.repository.ProductRepository;
-import vn.hoidanit.laptopshop.repository.RoleRepository;
-import vn.hoidanit.laptopshop.repository.UserRepository;
+import vn.hoidanit.laptopshop.repository.jpa.ProductRepository;
+import vn.hoidanit.laptopshop.repository.jpa.OrderRepository;
+import vn.hoidanit.laptopshop.repository.jpa.RoleRepository;
+import vn.hoidanit.laptopshop.repository.jpa.UserRepository;
 
 @Service
 public class UserService {

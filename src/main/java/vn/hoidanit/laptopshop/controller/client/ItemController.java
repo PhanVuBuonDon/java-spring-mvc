@@ -21,17 +21,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
-import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.Product_;
-import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
-import vn.hoidanit.laptopshop.repository.CartRepository;
+import vn.hoidanit.laptopshop.domain.Product;
+import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.repository.jpa.CartRepository;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
 import vn.hoidanit.laptopshop.service.VNPayService;
@@ -236,4 +234,25 @@ public class ItemController {
 
         return "client/product/show";
     }
+
+    // elasticsearch
+    @GetMapping("/search-products")
+    public String searchProducts(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "4") int size,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Product> searchResults = productService.elasticSearchProductsByKeyword(keyword, pageable);
+
+        model.addAttribute("allProducts", searchResults.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", searchResults.getTotalPages());
+        model.addAttribute("queryString", "keyword=" + keyword);
+        model.addAttribute("keyword", keyword);
+
+        return "client/product/search-result";
+    }
+
 }

@@ -1,10 +1,12 @@
 package vn.hoidanit.laptopshop.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
@@ -12,31 +14,40 @@ import org.springframework.stereotype.Controller;
 import jakarta.servlet.http.HttpSession;
 import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
+import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
+import vn.hoidanit.laptopshop.domain.dto.ProductElasticDTO;
+import vn.hoidanit.laptopshop.domain.elastic.ElasticProduct;
 import vn.hoidanit.laptopshop.domain.Order;
 import vn.hoidanit.laptopshop.domain.OrderDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
-import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
-import vn.hoidanit.laptopshop.repository.CartDetailRepository;
-import vn.hoidanit.laptopshop.repository.CartRepository;
-import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
-import vn.hoidanit.laptopshop.repository.OrderRepository;
-import vn.hoidanit.laptopshop.repository.ProductRepository;
+import vn.hoidanit.laptopshop.repository.elasticsearch.ElasticProductRepository;
+import vn.hoidanit.laptopshop.repository.jpa.CartDetailRepository;
+import vn.hoidanit.laptopshop.repository.jpa.CartRepository;
+import vn.hoidanit.laptopshop.repository.jpa.OrderDetailRepository;
+import vn.hoidanit.laptopshop.repository.jpa.OrderRepository;
+import vn.hoidanit.laptopshop.repository.jpa.ProductRepository;
 import vn.hoidanit.laptopshop.service.specification.ProductSpecs;
+// elasticsearch
 
 @Controller
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ElasticProductRepository elasticProductRepository;
+
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
     private final UserService userService;
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
 
-    public ProductService(ProductRepository productRepository, CartRepository cartRepository,
+    public ProductService(ProductRepository productRepository,
+            ElasticProductRepository elasticProductRepository,
+            CartRepository cartRepository,
             CartDetailRepository cartDetailRepository, UserService userService, OrderRepository orderRepository,
             OrderDetailRepository orderDetailRepository) {
         this.productRepository = productRepository;
+        this.elasticProductRepository = elasticProductRepository;
         this.cartRepository = cartRepository;
         this.cartDetailRepository = cartDetailRepository;
         this.userService = userService;
@@ -313,6 +324,24 @@ public class ProductService {
             order.setPaymentStatus(paymentStatus);
             this.orderRepository.save(order);
         }
+    }
+
+    public Page<Product> jpaSearchProductsByName(String keyword, Pageable pageable) {
+        return this.productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
+
+    // elasticsearch
+    public Page<Product> elasticSearchProductsByKeyword(String keyword, Pageable pageable) {
+        // Gọi repository sử dụng custom @Query
+        Page<ElasticProduct> results = this.elasticProductRepository.searchByKeyword(keyword, pageable);
+
+        // Chuyển đổi ElasticProduct sang Product
+        List<Product> products = results.getContent().stream()
+                .map(ProductElasticDTO::convertToProduct)
+                .collect(Collectors.toList());
+
+        // Trả về kết quả dưới dạng Page<Product>
+        return new PageImpl<>(products, pageable, results.getTotalElements());
     }
 
 }

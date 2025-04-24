@@ -1,4 +1,4 @@
-package vn.hoidanit.laptopshop.repository;
+package vn.hoidanit.laptopshop.repository.jpa;
 
 import java.util.List;
 

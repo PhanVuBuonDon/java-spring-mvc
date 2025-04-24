@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
         <div class="container-fluid fixed-top">
             <div class="container px-0">
                 <nav class="navbar navbar-light bg-white navbar-expand-xl">
@@ -15,6 +16,15 @@
                             <a href="/" class="nav-item nav-link active">Trang Chủ</a>
                             <a href="/products" class="nav-item nav-link">Sản Phẩm</a>
                         </div>
+                        <!-- Search bar -->
+                        <div class="text-center">
+                            <form action="/search-products" method="get" class="d-flex justify-content-center">
+                                <input type="text" name="keyword" class="form-control me-2"
+                                    placeholder="Tìm kiếm sản phẩm..." aria-label="Search">
+                                <button class="btn btn-outline-primary" type="submit">Tìm</button>
+                            </form>
+                        </div>
+
                         <div class="d-flex m-3 me-0">
                             <c:if test="${not empty pageContext.request.userPrincipal}">
                                 <a href="/cart" class="position-relative me-4 my-auto">

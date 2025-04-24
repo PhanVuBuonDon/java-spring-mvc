@@ -6,7 +6,7 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Trang chủ - Laptopshop</title>
+                <title>Kết quả tìm kiếm - Laptopshop</title>
                 <!-- Google Web Fonts -->
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,41 +46,37 @@
                 </div>
                 <!-- Spinner End -->
 
-
                 <jsp:include page="../layout/header.jsp" />
-
-                <jsp:include page="../layout/banner.jsp" />
-
-
 
                 <!-- Fruits Shop Start-->
                 <div class="container-fluid fruite py-5">
                     <div class="container py-5">
-                        <div class="tab-class text-center">
-                            <div class="row g-4">
-                                <div class="col-lg-4 text-start">
-                                    <h1>Sản phẩm nổi bật</h1>
-                                </div>
-
-
-
-                                <div class="col-lg-8 text-end">
-                                    <ul class="nav nav-pills d-inline-flex text-center mb-5">
-                                        <li class="nav-item">
-                                            <a class="d-flex m-2 py-2 bg-light rounded-pill active" href="/products">
-                                                <span class="text-dark" style="width: 130px;">All Products</span>
-                                            </a>
-
-                                    </ul>
-                                </div>
+                        <div class="row g-4 mb-5">
+                            <div>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                        <li class="breadcrumb-item active">Kết quả tìm kiếm</li>
+                                    </ol>
+                                </nav>
                             </div>
                             <div class="tab-content">
                                 <div id="tab-1" class="tab-pane fade show p-0 active">
-                                    <div class="row g-4">
-                                        <div class="col-lg-12">
+                                    <div class="row g-4 fruite">
+
+                                        <div class="search-result-title">
+                                            <h4>Kết quả tìm kiếm cho "
+                                                <c:out value="${keyword}" />"
+                                            </h4>
+                                        </div>
+
+                                        <div class="col-12 col-md-12 text-center">
                                             <div class="row g-4">
+                                                <c:if test="${totalPages == 0}">
+                                                    <div>Không tìm thấy sản phẩm</div>
+                                                </c:if>
                                                 <c:forEach var="product" items="${allProducts}">
-                                                    <div class="col-md-6 col-lg-4 col-xl-3">
+                                                    <div class="col-md-6 col-lg-3 col-xl-3">
                                                         <div class="rounded position-relative fruite-item">
                                                             <div class="fruite-img">
                                                                 <img src="/images/product/${product.image}"
@@ -96,8 +92,7 @@
                                                                     </a>
                                                                 </h4>
                                                                 <p style="font-size: 13px;">${product.shortDesc}</p>
-                                                                <div
-                                                                    class="d-flex flex-lg-wrap justify-content-center flex-column">
+                                                                <div class="d-flex flex-lg-wrap justify-content-center">
                                                                     <p style="font-size: 15px; text-align: center; width: 100%;"
                                                                         class="text-dark fw-bold mb-3">
                                                                         <fmt:formatNumber type="number"
@@ -120,12 +115,44 @@
                                                                             class="fa fa-shopping-bag me-2 text-primary"></i>
                                                                         Add to cart
                                                                     </button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </c:forEach>
+                                                <c:if test="${totalPages > 0}">
+                                                    <div class="pagination d-flex justify-content-center mt-5">
+                                                        <li class="page-item">
+                                                            <a class="${1 eq currentPage ? 'disabled page-link' : 'page-link'}"
+                                                                href="/search-products?keyword=${keyword}&page=${currentPage - 1}"
+                                                                aria-label="Previous">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                                                        <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
+                                                            <li class="page-item">
+                                                                <a class="${(loop.index + 1) eq currentPage ? 'active page-link' : 'page-link'}"
+                                                                    href="/search-products?keyword=${keyword}&page=${loop.index + 1}">
+                                                                    ${loop.index + 1}
+                                                                </a>
+                                                            </li>
+                                                        </c:forEach>
+                                                        <li class="page-item">
+                                                            <a class="${totalPages eq currentPage ? 'disabled page-link' : 'page-link'}"
+                                                                href="/search-products?keyword=${keyword}&page=${currentPage + 1}"
+                                                                aria-label="Next">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    </div>
+                                                </c:if>
+
                                             </div>
+
+
+
+
                                         </div>
                                     </div>
                                 </div>
